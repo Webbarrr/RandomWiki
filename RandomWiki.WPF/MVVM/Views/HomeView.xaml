@@ -1,0 +1,43 @@
+﻿<UserControl x:Class="RandomWiki.WPF.MVVM.Views.HomeView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:RandomWiki.WPF.MVVM.Views"
+             mc:Ignorable="d"
+             d:DesignHeight="550" d:DesignWidth="800">
+
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="VisibleIfTrueConverter" />
+    </UserControl.Resources>
+
+    <DockPanel>
+        <DockPanel DockPanel.Dock="Top">
+            <GroupBox Header="What do you fancy reading?">
+                <DockPanel Visibility="{Binding Path=HasInit, Converter={StaticResource VisibleIfTrueConverter}}">
+                    <DataGrid ItemsSource="{Binding RandomResponse, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              AutoGenerateColumns="False"
+                              Name="EntriesDataGrid"
+                              SelectedItem="{Binding SelectedResponse, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Article"
+                                                Binding="{Binding Title}"
+                                                Width="*"
+                                                IsReadOnly="True" />
+                        </DataGrid.Columns>
+                        <DataGrid.InputBindings>
+                            <MouseBinding Gesture="LeftDoubleClick"
+                                          Command="{Binding ReadEntryCommand}"
+                                          CommandParameter="{Binding ElementName=EntriesDataGrid, Path=SelectedItem}" />
+                        </DataGrid.InputBindings>
+                    </DataGrid>
+                </DockPanel>
+            </GroupBox>
+        </DockPanel>
+
+        <Button DockPanel.Dock="Bottom"
+                Content="{Binding ButtonContent}"
+                HorizontalAlignment="Center"
+                Command="{Binding GetEntriesCommand}" />
+    </DockPanel>
+</UserControl>
